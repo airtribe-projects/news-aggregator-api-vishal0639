@@ -4,17 +4,22 @@ const validateBody = (err, req, res, next) => {
   }
   try {
     const { username, password } = req.body;
+
     if (
       !username ||
       typeof username !== "string" ||
       username.trim() === "" ||
       !isNaN(username)
     ) {
-      return res.status(400).json({ message: "Username should be a non-empty string" });
+      return res
+        .status(400)
+        .json({ message: "Username should be a non-empty string" });
     }
+
     if ((!password && typeof password !== "string") || password.trim() === "") {
       return res.status(400).json({ message: "Password is required" });
     }
+
     next();
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });

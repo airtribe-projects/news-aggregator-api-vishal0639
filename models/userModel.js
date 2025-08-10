@@ -13,12 +13,15 @@ class User {
 
   update(updates) {
     const allowedUpdates = ["password"];
+
     Object.keys(updates).forEach((key) => {
       if (allowedUpdates.includes(key)) {
         this[key] = updates[key];
       }
     });
+
     this.updatedAt = new Date().toISOString();
+
     return this;
   }
 
