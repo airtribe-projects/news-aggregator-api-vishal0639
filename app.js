@@ -4,7 +4,7 @@ const app = express();
 const port = 3000;
 const userRoutes = require("./routes/userRoutes");
 const errorHandler = require("./middlewares/errorHandler");
-const preferencesRoutes = require("./routes/preferencesRoutes");
+const newsRoutes = require("./routes/newsRoutes");
 
 app.use(express.json());
 
@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
 
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/preferences", preferencesRoutes);
+app.use("/api/v1/news", newsRoutes);
 
 app.listen(port, (err) => {
   if (err) {
