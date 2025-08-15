@@ -50,8 +50,9 @@ const postFavoriteNews = (req, res) => {
 
 const getReadNews = (req, res) => {
   try {
-    const data = getNewsData();
-    res.status(200).json({ read: data.read });
+    const readNews = getReadNews();
+    const newsRead = readNews.find((news) => (news.id = req.params.id));
+    res.status(200).json({ read: newsRead });
   } catch (err) {
     console.error("Error getting read articles:", err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -60,8 +61,9 @@ const getReadNews = (req, res) => {
 
 const getFavoriteNews = (req, res) => {
   try {
-    const data = getNewsData();
-    res.status(200).json({ favorite: data.favorite });
+    const favoriteNews = getFavoriteNews();
+    const newsFavorite = favoriteNews.find((news) => (news.id = req.params.id));
+    res.status(200).json({ favorite: newsFavorite });
   } catch (err) {
     console.error("Error getting favorites:", err);
     res.status(500).json({ message: "Internal Server Error" });
