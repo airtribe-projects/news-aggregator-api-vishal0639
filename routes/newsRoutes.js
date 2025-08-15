@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const preferencesController = require("../controllers/newsController");
+const newController = require("../controllers/newsController");
 
-router.route("/").get(preferencesController.getAllPreferences);
-router.route("/").put(preferencesController.getBasedOnSourcePreferences);
+router.route("/").get(newController.getNews);
+// router.route("/").put(newController);
 
 module.exports = router;

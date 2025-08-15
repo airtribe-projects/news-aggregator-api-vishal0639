@@ -1,33 +1,8 @@
 const User = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/auth");
-const fs = require("fs");
-const path = require("path");
+const { getUsersData, saveUsersData } = require("../utils/fileService");
 const { createToken } = require("../utils/jwtUtils");
 
-const USERS_FILE = path.join(__dirname, "../user.json");
-
-// Note:readFileAsync and writeFileAsync is not working
-const getUsersData = () => {
-  try {
-    const rawData = fs.readFileSync(USERS_FILE, "utf-8");
-    const parsed = JSON.parse(rawData);
-
-    // ✅ Make sure you return the `users` array
-    return parsed.users || [];
-  } catch (err) {
-    console.error("Failed to read users.json:", err);
-    return []; // fallback to empty array
-  }
-};
-
-const saveUsersData = (users) => {
-  try {
-    fs.writeFileSync(USERS_FILE, JSON.stringify({ users }, null, 2), "utf-8");
-  } catch (err) {
-    console.error("Failed to write users.json:", err);
-    throw err;
-  }
-};
 const users = getUsersData();
 
 const registerUser = async (req, res) => {
@@ -41,11 +16,7 @@ const registerUser = async (req, res) => {
     }
     const hashedPassword = await hashPassword(password);
 
-    const defaultPreferences = {
-      category: null,
-      country: null,
-      language: null,
-    };
+    const defaultPreferences = {};
 
     const finalPreferences = { ...defaultPreferences, ...preferences };
 

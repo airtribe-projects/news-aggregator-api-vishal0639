@@ -5,6 +5,7 @@ const port = 3000;
 const userRoutes = require("./routes/userRoutes");
 const errorHandler = require("./middlewares/errorHandler");
 const newsRoutes = require("./routes/newsRoutes");
+const isAuthenticated = require("./middlewares/authMiddleware");
 
 app.use(express.json());
 
@@ -13,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler);
 
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/news", newsRoutes);
+app.use("/api/v1/news", isAuthenticated, newsRoutes);
 
 app.listen(port, (err) => {
   if (err) {
