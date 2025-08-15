@@ -6,7 +6,6 @@ const {
   validateUpdatePreferenceBody,
 } = require("../middlewares/validateBody");
 const isAuthenticated = require("../middlewares/authMiddleware");
-const { getAllPreferences } = require("../controllers/newsController");
 const router = express.Router();
 
 router.post("/register", validateRegisterBody, userController.registerUser);

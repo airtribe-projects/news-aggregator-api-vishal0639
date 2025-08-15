@@ -1,6 +1,9 @@
+const {
+  getUsersData,
+  saveUsersData,
+} = require("../fileService/userFileService");
 const User = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/auth");
-const { getUsersData, saveUsersData } = require("../utils/fileService");
 const { createToken } = require("../utils/jwtUtils");
 
 const users = getUsersData();

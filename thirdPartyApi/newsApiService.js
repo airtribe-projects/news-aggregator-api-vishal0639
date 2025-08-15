@@ -10,7 +10,7 @@ const getAllPreferencesNews = async () => {
     return {
       status: news.data.status,
       totalResults: news.data.totalResults,
-      articles: news.data.articles,
+      news: news.data.articles,
     };
   } catch (err) {
     throw new Error(err);
@@ -49,7 +49,7 @@ const getNewsBasedOnPreferences = async (preferences) => {
       return { msg: "no source news found ", status: 404 };
     }
 
-    return news.data;
+    return { news: news.data.sources };
   } catch (err) {
     throw new Error(err);
   }
