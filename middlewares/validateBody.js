@@ -46,11 +46,7 @@ const validateLoginBody = (err, req, res, next) => {
   }
 };
 
-const validateRegisterBody = (err, req, res, next) => {
-  if (err) {
-    return res.status(400).json({ message: "Invalid request body" });
-  }
-
+const validateRegisterBody = (req, res, next) => {
   try {
     const { username, password, preferences } = req.body;
     let errors = [];
@@ -129,32 +125,44 @@ const validateRegisterBody = (err, req, res, next) => {
   }
 };
 
-const validateUpdatePreferenceBody = (err, req, res, next) => {
-  if (err) {
-    return res.status(400).json({ message: "Invalid request body" });
-  }
-
+const validateUpdatePreferenceBody = (req, res, next) => {
   try {
-    const { category, country, language } = req.body;
+    const preferences = req.body.preferences || {};
+    const { category, country, language } = preferences;
     const errors = [];
 
-    // Validate category
-    if (
-      !category ||
-      typeof category !== "string" ||
-      !allowedCategories.includes(category.trim().toLowerCase())
-    ) {
-      errors.push("category must be one of: " + allowedCategories.join(", "));
+    // ✅ Check: At least one field must be provided
+    if (!Object.keys(preferences).length) {
+      return res.status(400).json({
+        error: "Validation failed",
+        details: [
+          "At least one of category, country, or language must be provided",
+        ],
+      });
     }
 
-    // Validate country
-    if (!country || typeof country !== "string" || country.trim() === "") {
-      errors.push("country must be a non-empty string");
+    // ✅ Validate category (if present)
+    if (category !== undefined) {
+      if (
+        typeof category !== "string" ||
+        !allowedCategories.includes(category.trim().toLowerCase())
+      ) {
+        errors.push("category must be one of: " + allowedCategories.join(", "));
+      }
     }
 
-    // Validate language
-    if (!language || typeof language !== "string" || language.trim() === "") {
-      errors.push("language must be a non-empty string");
+    // ✅ Validate country (if present)
+    if (country !== undefined) {
+      if (typeof country !== "string" || country.trim() === "") {
+        errors.push("country must be a non-empty string");
+      }
+    }
+
+    // ✅ Validate language (if present)
+    if (language !== undefined) {
+      if (typeof language !== "string" || language.trim() === "") {
+        errors.push("language must be a non-empty string");
+      }
     }
 
     if (errors.length) {
@@ -166,6 +174,7 @@ const validateUpdatePreferenceBody = (err, req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("Preference validation error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

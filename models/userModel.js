@@ -1,8 +1,9 @@
 class User {
-  constructor(username, password) {
+  constructor(username, password, preferences) {
     this.id = User.generateId();
     this.username = username;
     this.password = password;
+    this.preferences = preferences;
     this.createdAt = new Date().toISOString();
     this.updatedAt = new Date().toISOString();
   }
@@ -12,16 +13,28 @@ class User {
   }
 
   update(updates) {
-    const allowedUpdates = ["password"];
+    const allowedUpdates = ["preferences"];
 
     Object.keys(updates).forEach((key) => {
       if (allowedUpdates.includes(key)) {
-        this[key] = updates[key];
+        if (key === "preferences") {
+          // Only update valid subfields inside preferences
+          const allowedPref = ["category", "country", "language"];
+          this.preferences = {
+            ...this.preferences,
+            ...Object.fromEntries(
+              Object.entries(updates.preferences || {}).filter(([k]) =>
+                allowedPref.includes(k)
+              )
+            ),
+          };
+        } else {
+          this[key] = updates[key];
+        }
       }
     });
 
     this.updatedAt = new Date().toISOString();
-
     return this;
   }
 
@@ -30,6 +43,8 @@ class User {
       id: this.id,
       username: this.username,
       createdAt: this.createdAt,
+      password: this.password,
+      preferences: this.preferences,
       updatedAt: this.updatedAt,
     };
   }

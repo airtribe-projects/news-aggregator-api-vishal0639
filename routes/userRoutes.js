@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, loginUser } = require("../controllers/userController");
+const userController = require("../controllers/userController");
 const {
   validateRegisterBody,
   validateLoginBody,
@@ -9,12 +9,20 @@ const isAuthenticated = require("../middlewares/authMiddleware");
 const { getAllPreferences } = require("../controllers/newsController");
 const router = express.Router();
 
-router.post("/register", validateRegisterBody, registerUser);
+router.post("/register", validateRegisterBody, userController.registerUser);
 
-router.post("/login", validateLoginBody, loginUser);
+router.post("/login", validateLoginBody, userController.loginUser);
 
-router.route("/preferences").get(isAuthenticated, getAllPreferences);
+router
+  .route("/preferences")
+  .get(isAuthenticated, userController.getAllPreferences);
 
-router.route("/preferences").post(isAuthenticated,validateUpdatePreferenceBody);
+router
+  .route("/preferences")
+  .patch(
+    isAuthenticated,
+    validateUpdatePreferenceBody,
+    userController.updatePreferences
+  );
 
 module.exports = router;
